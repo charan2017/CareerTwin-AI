@@ -151,3 +151,9 @@ if uploaded_file:
 
     else:
         st.error("🔴 Needs More Preparation")
+        selected_role = st.selectbox(
+    "Select Target Role",
+    list(ROLES.keys())
+)
+
+required_skills = ROLES[selected_role]
