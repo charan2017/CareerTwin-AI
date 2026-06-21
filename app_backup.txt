@@ -38,12 +38,10 @@ if uploaded_file:
 
     st.success("Resume Uploaded Successfully!")
 
+    # Extract text
     resume_text = extract_text(uploaded_file)
 
-    # -----------------------------
-    # Resume Text
-    # -----------------------------
-
+    # Show resume text
     st.subheader("📄 Resume Text")
 
     st.text_area(
@@ -59,7 +57,7 @@ if uploaded_file:
     detected_skills = []
 
     for skill in AI_ENGINEER:
-        if skill.lower() in resume_text.lower():
+        if skill.lower() in resume_text:
             detected_skills.append(skill)
 
     st.subheader("✅ Detected Skills")
@@ -77,42 +75,38 @@ if uploaded_file:
     missing_skills = []
 
     for skill in AI_ENGINEER:
-        if skill.lower() not in resume_text.lower():
+        if skill.lower() not in resume_text:
             missing_skills.append(skill)
 
     st.subheader("❌ Missing Skills")
 
     if missing_skills:
         for skill in missing_skills:
-            st.info(skill)
-    else:
-        st.success("No missing skills found!")
+            st.error(skill)
 
     # -----------------------------
     # Readiness Score
     # -----------------------------
 
-    score = round(
+    score = int(
         (len(detected_skills) / len(AI_ENGINEER)) * 100
     )
 
-    st.subheader("📊 Readiness Score")
+    st.subheader("📊 AI Engineer Readiness")
 
     st.progress(score)
 
-    st.metric(
-        "AI Engineer Readiness",
-        f"{score}%"
-    )
+    st.write(f"### {score}% Ready")
 
     # -----------------------------
-    # Skill Chart
+    # Pie Chart
     # -----------------------------
 
-    st.subheader("📈 Skills Analysis")
+    st.subheader("📈 Skills Analytics")
 
-    labels = ["Detected", "Missing"]
-    values = [
+    labels = ["Detected Skills", "Missing Skills"]
+
+    sizes = [
         len(detected_skills),
         len(missing_skills)
     ]
@@ -120,10 +114,12 @@ if uploaded_file:
     fig, ax = plt.subplots()
 
     ax.pie(
-        values,
+        sizes,
         labels=labels,
         autopct="%1.1f%%"
     )
+
+    ax.set_title("Skills Distribution")
 
     st.pyplot(fig)
 
@@ -131,22 +127,15 @@ if uploaded_file:
     # Learning Roadmap
     # -----------------------------
 
-    st.subheader("🛣 Learning Roadmap")
+    st.subheader("🚀 Personalized Learning Roadmap")
 
     if missing_skills:
 
-        for i, skill in enumerate(
-            missing_skills,
-            start=1
-        ):
+        for i, skill in enumerate(missing_skills, start=1):
+
             st.info(
                 f"Week {i}: Learn {skill}"
             )
-
-    else:
-        st.success(
-            "Excellent! You already have all required skills."
-        )
 
     # -----------------------------
     # Career Status
@@ -162,3 +151,9 @@ if uploaded_file:
 
     else:
         st.error("🔴 Needs More Preparation")
+        selected_role = st.selectbox(
+    "Select Target Role",
+    list(ROLES.keys())
+)
+
+required_skills = ROLES[selected_role]
