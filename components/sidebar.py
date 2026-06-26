@@ -1,36 +1,76 @@
 import streamlit as st
 
+
 def sidebar():
 
-    st.sidebar.image(
-        "https://img.icons8.com/color/96/artificial-intelligence.png",
-        width=70
-    )
+    with st.sidebar:
 
-    st.sidebar.title("CareerTwin AI")
+        st.markdown(
+            """
+            <h1 style='text-align:center;color:#60A5FA;'>
+                🤖 CareerTwin AI
+            </h1>
+            """,
+            unsafe_allow_html=True,
+        )
 
-    st.sidebar.caption(
-        "AI Resume Intelligence Platform"
-    )
+        st.markdown(
+            "<p style='text-align:center;color:gray;'>AI Resume Intelligence Platform</p>",
+            unsafe_allow_html=True,
+        )
 
-    st.sidebar.divider()
+        st.divider()
 
-    page = st.sidebar.radio(
-        "Navigation",
-        [
-            "🏠 Dashboard",
-            "📄 Resume Analyzer",
-            "📊 ATS Score",
-            "🧠 Skill Gap",
-            "🗺 Learning Roadmap",
-            "💼 Career Advisor",
-            "📈 Analytics",
-            "⚙ Settings"
-        ]
-    )
+        page = st.radio(
+            "📌 Navigation",
+            [
+                "🏠 Dashboard",
+                "📄 Resume Analyzer",
+                "📊 ATS Score",
+                "🧠 Skill Gap",
+                "🗺 Learning Roadmap",
+                "💼 Career Advisor",
+                "📈 Analytics",
+                "⚙ Settings"
+            ]
+        )
 
-    st.sidebar.divider()
+        st.divider()
 
-    st.sidebar.success("Version 2.0")
+        st.subheader("👨‍💻 Developer")
+
+        st.write("**Charan Gosala**")
+
+        st.caption("B.Tech AIML Student")
+
+        st.divider()
+
+        st.subheader("📊 Project Status")
+
+        st.progress(0.35)
+
+        st.caption("Sprint 4 in Progress")
+
+        st.divider()
+
+        st.info(
+            """
+### 🚀 CareerTwin AI Pro
+
+Version **2.0**
+
+AI Resume Intelligence Platform
+
+Made with ❤️ using
+
+- Python
+- Streamlit
+- Plotly
+"""
+        )
+
+        st.divider()
+
+        st.caption("© 2026 Charan Gosala")
 
     return page

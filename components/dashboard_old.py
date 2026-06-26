@@ -12,21 +12,21 @@ from components.candidate import show_candidate
 from components.assistant import show_ai_assistant
 from components.roadmap import show_roadmap
 
-
 def dashboard():
 
     st.markdown("## 📄 Resume Analysis")
 
-    col1, col2 = st.columns([2, 1])
+    upload_col, role_col = st.columns([2, 1])
 
-    with col1:
+    with upload_col:
 
         uploaded = st.file_uploader(
-            "Upload Resume",
-            type=["pdf"]
+            "Upload Your Resume (PDF)",
+            type=["pdf"],
+            help="Upload a professional resume in PDF format."
         )
 
-    with col2:
+    with role_col:
 
         selected_role = st.selectbox(
             "🎯 Target Role",
@@ -35,19 +35,25 @@ def dashboard():
 
     st.divider()
 
+    # -----------------------------
+    # Wait for Resume Upload
+    # -----------------------------
+
     if uploaded is None:
 
-        st.info("👆 Upload your resume to start analysis.")
+        st.info("👆 Upload your resume to begin analysis.")
 
         return
+
+    # -----------------------------
+    # Resume Processing
+    # -----------------------------
 
     with st.spinner("Analyzing Resume..."):
 
         resume_text = extract_text(uploaded)
 
-        info = extract_candidate_info(
-            resume_text
-        )
+        info = extract_candidate_info(resume_text)
 
         analysis = analyze_resume(
             resume_text,
@@ -56,19 +62,22 @@ def dashboard():
 
     st.success("✅ Resume analyzed successfully!")
 
+    # -----------------------------
+    # KPI Cards
+    # -----------------------------
+
     show_metrics(
-
         analysis["score"],
-
         analysis["matched"],
-
         analysis["missing"],
-
         analysis["readiness"]
-
     )
 
     st.divider()
+
+    # -----------------------------
+    # Candidate + ATS
+    # -----------------------------
 
     left, right = st.columns(2)
 
@@ -85,43 +94,45 @@ def dashboard():
         )
 
     st.divider()
-        # =====================================================
+        # -----------------------------
     # Skills Section
-    # =====================================================
+    # -----------------------------
 
-    skill_col1, skill_col2 = st.columns(2)
+    left, right = st.columns(2)
 
-    with skill_col1:
+    with left:
 
         st.subheader("✅ Skills Found")
 
         if analysis["matched"]:
 
             for skill in analysis["matched"]:
+
                 st.success(skill)
 
         else:
 
             st.warning("No matching skills found.")
 
-    with skill_col2:
+    with right:
 
         st.subheader("❌ Missing Skills")
 
         if analysis["missing"]:
 
             for skill in analysis["missing"]:
+
                 st.warning(skill)
 
         else:
 
-            st.success("No missing skills!")
+            st.success("No missing skills 🎉")
 
     st.divider()
 
-    # =====================================================
+    # -----------------------------
     # Analytics Dashboard
-    # =====================================================
+    # -----------------------------
 
     st.subheader("📈 Analytics Dashboard")
 
@@ -131,52 +142,50 @@ def dashboard():
 
     st.divider()
 
-    # =====================================================
+    # -----------------------------
     # AI Career Coach
-    # =====================================================
+    # -----------------------------
 
     show_ai_assistant(
         analysis
     )
 
     st.divider()
-        # =====================================================
+        # -----------------------------
     # Career Status
-    # =====================================================
+    # -----------------------------
 
     st.subheader("🎯 Career Status")
 
-    score = analysis["score"]
-
-    if score >= 80:
+    if analysis["score"] >= 80:
 
         st.success(
             """
 🎉 Excellent!
 
-Your resume is strong for the selected role.
+Your resume looks strong for the selected role.
 
-### Recommended Next Steps
+### Next Steps
 - Practice coding interviews
-- Build advanced projects
-- Keep GitHub updated
-- Apply for internships/jobs
+- Build 2–3 advanced projects
+- Keep your GitHub updated
+- Start applying for internships/jobs
 """
         )
 
-    elif score >= 60:
+    elif analysis["score"] >= 60:
 
         st.warning(
             """
 👍 Good Progress!
 
-You are close to becoming job-ready.
+You're close to being job-ready.
 
 ### Recommended Actions
 - Learn the missing skills
 - Improve your resume
 - Build more portfolio projects
-- Practice aptitude & interviews
+- Practice aptitude and interviews
 """
         )
 
@@ -184,34 +193,25 @@ You are close to becoming job-ready.
 
         st.error(
             """
-🚀 Keep Improving!
+🚀 Keep Learning!
 
-Your resume still needs work.
+Your resume needs improvement.
 
 ### Focus On
-- Learn the missing skills
-- Complete certifications
-- Build beginner projects
-- Strengthen core concepts
+- Learning the missing skills
+- Completing certifications
+- Building beginner projects
+- Strengthening your fundamentals
 """
         )
 
     st.divider()
 
-    # =====================================================
-    # Learning Roadmap
-    # =====================================================
-
-    show_roadmap(
-        analysis
-    )
-
-    st.divider()
-        # =====================================================
+    # -----------------------------
     # Resume Preview
-    # =====================================================
+    # -----------------------------
 
-    with st.expander("📄 Resume Preview", expanded=False):
+    with st.expander("📄 Resume Preview"):
 
         st.text_area(
             "Extracted Resume Text",
@@ -221,19 +221,16 @@ Your resume still needs work.
 
     st.divider()
 
-    # =====================================================
+    # -----------------------------
     # Footer
-    # =====================================================
+    # -----------------------------
 
-    st.markdown(
-        """
----
-### 🤖 CareerTwin AI Pro
+    st.divider()
 
-AI Career Intelligence Platform
+    show_roadmap(
+        analysis
+    )
 
-**Developed by Charan Gosala**
-
-Version **2.0**
-"""
+    st.caption(
+        "🤖 CareerTwin AI Pro • AI Career Intelligence Platform • Version 2.0"
     )
