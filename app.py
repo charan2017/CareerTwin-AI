@@ -1,164 +1,23 @@
 import streamlit as st
-import matplotlib.pyplot as plt
 
-from resume_parser import extract_text
-from skills_db import AI_ENGINEER
-
-# -----------------------------
-# Page Configuration
-# -----------------------------
+from components.sidebar import sidebar
+from components.dashboard import dashboard
 
 st.set_page_config(
     page_title="CareerTwin AI",
     page_icon="🤖",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# -----------------------------
-# Title
-# -----------------------------
+page = sidebar()
 
-st.title("🤖 CareerTwin AI")
-st.write("Upload your resume and analyze your AI Engineer readiness.")
+if page == "🏠 Dashboard":
 
-# -----------------------------
-# Upload Resume
-# -----------------------------
+    dashboard()
 
-uploaded_file = st.file_uploader(
-    "Upload Resume",
-    type=["pdf"]
-)
+else:
 
-# -----------------------------
-# Process Resume
-# -----------------------------
+    st.title(page)
 
-if uploaded_file:
-
-    st.success("Resume Uploaded Successfully!")
-
-    resume_text = extract_text(uploaded_file)
-
-    # -----------------------------
-    # Resume Text
-    # -----------------------------
-
-    st.subheader("📄 Resume Text")
-
-    st.text_area(
-        "Extracted Content",
-        resume_text,
-        height=250
-    )
-
-    # -----------------------------
-    # Detect Skills
-    # -----------------------------
-
-    detected_skills = []
-
-    for skill in AI_ENGINEER:
-        if skill.lower() in resume_text.lower():
-            detected_skills.append(skill)
-
-    st.subheader("✅ Detected Skills")
-
-    if detected_skills:
-        for skill in detected_skills:
-            st.success(skill)
-    else:
-        st.warning("No skills detected")
-
-    # -----------------------------
-    # Missing Skills
-    # -----------------------------
-
-    missing_skills = []
-
-    for skill in AI_ENGINEER:
-        if skill.lower() not in resume_text.lower():
-            missing_skills.append(skill)
-
-    st.subheader("❌ Missing Skills")
-
-    if missing_skills:
-        for skill in missing_skills:
-            st.info(skill)
-    else:
-        st.success("No missing skills found!")
-
-    # -----------------------------
-    # Readiness Score
-    # -----------------------------
-
-    score = round(
-        (len(detected_skills) / len(AI_ENGINEER)) * 100
-    )
-
-    st.subheader("📊 Readiness Score")
-
-    st.progress(score)
-
-    st.metric(
-        "AI Engineer Readiness",
-        f"{score}%"
-    )
-
-    # -----------------------------
-    # Skill Chart
-    # -----------------------------
-
-    st.subheader("📈 Skills Analysis")
-
-    labels = ["Detected", "Missing"]
-    values = [
-        len(detected_skills),
-        len(missing_skills)
-    ]
-
-    fig, ax = plt.subplots()
-
-    ax.pie(
-        values,
-        labels=labels,
-        autopct="%1.1f%%"
-    )
-
-    st.pyplot(fig)
-
-    # -----------------------------
-    # Learning Roadmap
-    # -----------------------------
-
-    st.subheader("🛣 Learning Roadmap")
-
-    if missing_skills:
-
-        for i, skill in enumerate(
-            missing_skills,
-            start=1
-        ):
-            st.info(
-                f"Week {i}: Learn {skill}"
-            )
-
-    else:
-        st.success(
-            "Excellent! You already have all required skills."
-        )
-
-    # -----------------------------
-    # Career Status
-    # -----------------------------
-
-    st.subheader("🎯 Career Status")
-
-    if score >= 80:
-        st.success("🟢 Job Ready")
-
-    elif score >= 60:
-        st.warning("🟡 Almost Ready")
-
-    else:
-        st.error("🔴 Needs More Preparation")
+    st.info("🚧 Module Under Development")
