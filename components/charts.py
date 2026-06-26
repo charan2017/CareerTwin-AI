@@ -61,7 +61,7 @@ def show_skill_chart(analysis):
 
     st.plotly_chart(
         fig,
-        use_container_width=True
+        width="stretch"
     )
 
 
@@ -104,7 +104,7 @@ def show_bar_chart(analysis):
 
     st.plotly_chart(
         fig,
-        use_container_width=True
+        width="stretch"
     )
 
 

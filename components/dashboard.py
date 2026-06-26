@@ -1,5 +1,9 @@
 import streamlit as st
 
+from utils.job_match import calculate_job_matches
+from components.job_match import show_job_matches
+from utils.suggestions import generate_suggestions
+from components.recommendations import show_recommendations
 from resume_parser import extract_text
 from utils.extractor import extract_candidate_info
 from utils.analyzer import analyze_resume
@@ -11,6 +15,8 @@ from components.charts import show_dashboard
 from components.candidate import show_candidate
 from components.assistant import show_ai_assistant
 from components.roadmap import show_roadmap
+from utils.suggestions import generate_suggestions
+from components.recommendations import show_recommendations
 
 
 def dashboard():
@@ -135,8 +141,25 @@ def dashboard():
     # AI Career Coach
     # =====================================================
 
+    # =====================================================
+# AI Career Coach
+# =====================================================
+
     show_ai_assistant(
         analysis
+    )
+
+# =====================================================
+# AI Resume Suggestions
+# =====================================================
+
+    suggestion_data = generate_suggestions(
+        analysis,
+        selected_role
+    )
+
+    show_recommendations(
+        suggestion_data
     )
 
     st.divider()
@@ -237,3 +260,16 @@ AI Career Intelligence Platform
 Version **2.0**
 """
     )
+    # =====================================================
+# Job Match Analysis
+# =====================================================
+
+    job_matches = calculate_job_matches(
+        resume_text
+    )
+
+    show_job_matches(
+        job_matches
+    )
+
+    st.divider()

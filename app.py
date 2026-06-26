@@ -3,6 +3,7 @@ import streamlit as st
 from components.sidebar import sidebar
 from components.hero import hero
 from components.dashboard import dashboard
+from components.hero import hero
 
 st.set_page_config(
     page_title="CareerTwin AI",
@@ -45,6 +46,7 @@ st.markdown(hide_style, unsafe_allow_html=True)
 page = sidebar()
 
 if page == "🏠 Dashboard":
+
 
     hero()
 
