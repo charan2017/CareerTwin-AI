@@ -1,38 +1,48 @@
 import streamlit as st
 
-from utils.job_match import calculate_job_matches
-from components.job_match import show_job_matches
-from utils.suggestions import generate_suggestions
-from components.recommendations import show_recommendations
+# -----------------------------
+# Resume Processing
+# -----------------------------
 from resume_parser import extract_text
 from utils.extractor import extract_candidate_info
 from utils.analyzer import analyze_resume
 from skills_db import ROLES
 
+# -----------------------------
+# Components
+# -----------------------------
 from components.metrics import show_metrics
 from components.gauge import show_gauge
 from components.charts import show_dashboard
 from components.candidate import show_candidate
 from components.assistant import show_ai_assistant
 from components.roadmap import show_roadmap
-from utils.suggestions import generate_suggestions
 from components.recommendations import show_recommendations
+from components.job_match import show_job_matches
+from components.pdf_download import show_pdf_download
+
+# -----------------------------
+# Utilities
+# -----------------------------
+from utils.suggestions import generate_suggestions
+from utils.job_match import calculate_job_matches
 
 
 def dashboard():
 
     st.markdown("## 📄 Resume Analysis")
 
-    col1, col2 = st.columns([2, 1])
+    upload_col, role_col = st.columns([2, 1])
 
-    with col1:
+    with upload_col:
 
         uploaded = st.file_uploader(
-            "Upload Resume",
-            type=["pdf"]
+            "Upload Resume (PDF)",
+            type=["pdf"],
+            help="Upload your resume in PDF format."
         )
 
-    with col2:
+    with role_col:
 
         selected_role = st.selectbox(
             "🎯 Target Role",
@@ -43,9 +53,13 @@ def dashboard():
 
     if uploaded is None:
 
-        st.info("👆 Upload your resume to start analysis.")
+        st.info("👆 Upload your resume to begin analysis.")
 
         return
+
+    # -----------------------------
+    # Analyze Resume
+    # -----------------------------
 
     with st.spinner("Analyzing Resume..."):
 
@@ -60,21 +74,33 @@ def dashboard():
             selected_role
         )
 
+        suggestion_data = generate_suggestions(
+            analysis,
+            selected_role
+        )
+
+        job_matches = calculate_job_matches(
+            resume_text
+        )
+
     st.success("✅ Resume analyzed successfully!")
 
+    # -----------------------------
+    # KPI Cards
+    # -----------------------------
+
     show_metrics(
-
         analysis["score"],
-
         analysis["matched"],
-
         analysis["missing"],
-
         analysis["readiness"]
-
     )
 
     st.divider()
+
+    # -----------------------------
+    # Candidate + ATS
+    # -----------------------------
 
     left, right = st.columns(2)
 
@@ -91,13 +117,13 @@ def dashboard():
         )
 
     st.divider()
-        # =====================================================
+        # -----------------------------
     # Skills Section
-    # =====================================================
+    # -----------------------------
 
-    skill_col1, skill_col2 = st.columns(2)
+    skills_col1, skills_col2 = st.columns(2)
 
-    with skill_col1:
+    with skills_col1:
 
         st.subheader("✅ Skills Found")
 
@@ -110,7 +136,7 @@ def dashboard():
 
             st.warning("No matching skills found.")
 
-    with skill_col2:
+    with skills_col2:
 
         st.subheader("❌ Missing Skills")
 
@@ -125,9 +151,9 @@ def dashboard():
 
     st.divider()
 
-    # =====================================================
+    # -----------------------------
     # Analytics Dashboard
-    # =====================================================
+    # -----------------------------
 
     st.subheader("📈 Analytics Dashboard")
 
@@ -137,139 +163,82 @@ def dashboard():
 
     st.divider()
 
-    # =====================================================
+    # -----------------------------
     # AI Career Coach
-    # =====================================================
-
-    # =====================================================
-# AI Career Coach
-# =====================================================
+    # -----------------------------
 
     show_ai_assistant(
         analysis
     )
 
-# =====================================================
-# AI Resume Suggestions
-# =====================================================
+    st.divider()
 
-    suggestion_data = generate_suggestions(
-        analysis,
-        selected_role
-    )
+    # -----------------------------
+    # AI Resume Suggestions
+    # -----------------------------
 
     show_recommendations(
         suggestion_data
     )
 
     st.divider()
-        # =====================================================
-    # Career Status
-    # =====================================================
-
-    st.subheader("🎯 Career Status")
-
-    score = analysis["score"]
-
-    if score >= 80:
-
-        st.success(
-            """
-🎉 Excellent!
-
-Your resume is strong for the selected role.
-
-### Recommended Next Steps
-- Practice coding interviews
-- Build advanced projects
-- Keep GitHub updated
-- Apply for internships/jobs
-"""
-        )
-
-    elif score >= 60:
-
-        st.warning(
-            """
-👍 Good Progress!
-
-You are close to becoming job-ready.
-
-### Recommended Actions
-- Learn the missing skills
-- Improve your resume
-- Build more portfolio projects
-- Practice aptitude & interviews
-"""
-        )
-
-    else:
-
-        st.error(
-            """
-🚀 Keep Improving!
-
-Your resume still needs work.
-
-### Focus On
-- Learn the missing skills
-- Complete certifications
-- Build beginner projects
-- Strengthen core concepts
-"""
-        )
-
-    st.divider()
-
-    # =====================================================
-    # Learning Roadmap
-    # =====================================================
-
-    show_roadmap(
-        analysis
-    )
-
-    st.divider()
-        # =====================================================
-    # Resume Preview
-    # =====================================================
-
-    with st.expander("📄 Resume Preview", expanded=False):
-
-        st.text_area(
-            "Extracted Resume Text",
-            resume_text,
-            height=350
-        )
-
-    st.divider()
-
-    # =====================================================
-    # Footer
-    # =====================================================
-
-    st.markdown(
-        """
----
-### 🤖 CareerTwin AI Pro
-
-AI Career Intelligence Platform
-
-**Developed by Charan Gosala**
-
-Version **2.0**
-"""
-    )
-    # =====================================================
-# Job Match Analysis
-# =====================================================
-
-    job_matches = calculate_job_matches(
-        resume_text
-    )
+        # -----------------------------
+    # Job Match Analysis
+    # -----------------------------
 
     show_job_matches(
         job_matches
     )
 
     st.divider()
+
+    # -----------------------------
+    # Learning Roadmap
+    # -----------------------------
+
+    st.subheader("🗺 Personalized Learning Roadmap")
+
+    show_roadmap(
+        analysis
+    )
+
+    st.divider()
+
+    # -----------------------------
+    # PDF Career Report
+    # -----------------------------
+
+    show_pdf_download(
+        info,
+        analysis,
+        suggestion_data
+    )
+
+    st.divider()
+        # -----------------------------
+    # Job Match Analysis
+    # -----------------------------
+
+    show_job_matches(
+        job_matches
+    )
+
+    st.divider()
+
+    # -----------------------------
+    # Learning Roadmap
+    # -----------------------------
+
+    st.subheader("🗺 Personalized Learning Roadmap")
+
+    show_roadmap(
+        analysis
+    )
+
+    st.divider()
+
+    # -----------------------------
+    # PDF Career Report
+    # -----------------------------
+
+   
