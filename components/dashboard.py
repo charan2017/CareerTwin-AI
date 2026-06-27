@@ -3,6 +3,8 @@ import streamlit as st
 # -----------------------------
 # Resume Processing
 # -----------------------------
+from utils.career_readiness import calculate_career_readiness
+from components.career_readiness import show_career_readiness
 from resume_parser import extract_text
 from utils.extractor import extract_candidate_info
 from utils.analyzer import analyze_resume
@@ -82,7 +84,10 @@ def dashboard():
         job_matches = calculate_job_matches(
             resume_text
         )
-
+        career_data = calculate_career_readiness(
+            analysis,
+            job_matches
+        )
     st.success("✅ Resume analyzed successfully!")
 
     # -----------------------------
@@ -185,7 +190,9 @@ def dashboard():
         # -----------------------------
     # Job Match Analysis
     # -----------------------------
-
+    show_career_readiness(
+        career_data
+    )
     show_job_matches(
         job_matches
     )
