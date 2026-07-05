@@ -7,15 +7,22 @@ def sidebar():
 
         st.markdown(
             """
-            <h1 style='text-align:center;color:#60A5FA;'>
-                🤖 CareerTwin AI
-            </h1>
-            """,
-            unsafe_allow_html=True,
-        )
+            <div style="
+                text-align:center;
+                padding:10px;
+            ">
+                <h1 style="color:#3B82F6;margin-bottom:5px;">
+                    🤖 CareerTwin AI
+                </h1>
 
-        st.markdown(
-            "<p style='text-align:center;color:gray;'>AI Resume Intelligence Platform</p>",
+                <p style="
+                    color:#94A3B8;
+                    font-size:15px;
+                ">
+                    AI Career Intelligence Platform
+                </p>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
@@ -27,45 +34,47 @@ def sidebar():
                 "🏠 Dashboard",
                 "📄 Resume Analyzer",
                 "📊 ATS Score",
-                "🧠 Skill Gap",
+                "🎯 Skill Gap",
                 "🗺 Learning Roadmap",
                 "💼 Career Advisor",
                 "📈 Analytics",
-                "⚙ Settings"
-            ]
+                "⚙ Settings",
+                "🎤 Interview Simulator",
+            ],
+            key="sidebar_navigation",
         )
 
         st.divider()
 
-        st.subheader("👨‍💻 Developer")
+        st.markdown("### 👨‍💻 Developer")
 
-        st.write("**Charan Gosala**")
+        st.success("**Charan Gosala**")
 
-        st.caption("B.Tech AIML Student")
+        st.caption("B.Tech AI & ML Student")
 
         st.divider()
 
-        st.subheader("📊 Project Status")
+        st.markdown("### 🚀 Project Progress")
 
-        st.progress(0.35)
+        st.progress(0.75)
 
-        st.caption("Sprint 4 in Progress")
+        st.caption("Version 3.0 Development")
 
         st.divider()
 
         st.info(
             """
-### 🚀 CareerTwin AI Pro
+### 🌟 CareerTwin AI Pro
 
-Version **2.0**
+**Current Features**
 
-AI Resume Intelligence Platform
-
-Made with ❤️ using
-
-- Python
-- Streamlit
-- Plotly
+- 📄 Resume Analysis
+- 📊 ATS Score
+- 🎯 Job Match
+- 🚀 Career Readiness
+- 🤖 AI Resume Coach
+- 🗺 Learning Roadmap
+- 📄 PDF Report
 """
         )
 

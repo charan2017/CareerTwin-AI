@@ -1,103 +1,194 @@
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import SimpleDocTemplate
-from reportlab.platypus import Paragraph
-from reportlab.platypus import Spacer
+from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.colors import HexColor
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+)
 
 
-def generate_pdf(info, analysis, suggestions, output_path):
+def heading(text, styles):
+
+    style = styles["Heading2"]
+
+    style.textColor = HexColor("#2563EB")
+
+    return Paragraph(text, style)
+
+
+def body(text, styles):
+
+    return Paragraph(text, styles["BodyText"])
+
+
+def generate_pdf(
+    info,
+    analysis,
+    suggestions,
+    output_path
+):
 
     styles = getSampleStyleSheet()
+
+    title = styles["Title"]
+
+    title.alignment = TA_CENTER
+
+    title.textColor = HexColor("#1D4ED8")
 
     doc = SimpleDocTemplate(output_path)
 
     story = []
 
-    story.append(
-        Paragraph("<b>CareerTwin AI Career Report</b>", styles["Title"])
-    )
-
-    story.append(Spacer(1, 20))
+    # --------------------------------------------------
+    # Title
+    # --------------------------------------------------
 
     story.append(
-        Paragraph("<b>Candidate Information</b>", styles["Heading2"])
-    )
-
-    story.append(
-        Paragraph(f"Name: {info.get('name', 'N/A')}", styles["BodyText"])
+        Paragraph(
+            "CareerTwin AI Professional Career Report",
+            title
+        )
     )
 
     story.append(
-        Paragraph(f"Email: {info.get('email', 'N/A')}", styles["BodyText"])
+        Spacer(1, 25)
+    )
+
+    # --------------------------------------------------
+    # Candidate
+    # --------------------------------------------------
+
+    story.append(
+        heading("Candidate Information", styles)
     )
 
     story.append(
-        Paragraph(f"Phone: {info.get('phone', 'N/A')}", styles["BodyText"])
+        body(f"Name : {info.get('name','N/A')}", styles)
     )
 
     story.append(
-        Paragraph(f"GitHub: {info.get('github', 'N/A')}", styles["BodyText"])
+        body(f"Email : {info.get('email','N/A')}", styles)
     )
 
     story.append(
-        Paragraph(f"LinkedIn: {info.get('linkedin', 'N/A')}", styles["BodyText"])
-    )
-
-    story.append(Spacer(1, 20))
-
-    story.append(
-        Paragraph("<b>Resume Analysis</b>", styles["Heading2"])
+        body(f"Phone : {info.get('phone','N/A')}", styles)
     )
 
     story.append(
-        Paragraph(f"ATS Score: {analysis['score']}%", styles["BodyText"])
+        body(f"GitHub : {info.get('github','N/A')}", styles)
     )
 
     story.append(
-        Paragraph(f"Career Status: {analysis['readiness']}", styles["BodyText"])
+        body(f"LinkedIn : {info.get('linkedin','N/A')}", styles)
     )
 
-    story.append(Spacer(1, 20))
+    story.append(
+        Spacer(1,20)
+    )
+
+    # --------------------------------------------------
+    # Resume Score
+    # --------------------------------------------------
 
     story.append(
-        Paragraph("<b>Matched Skills</b>", styles["Heading2"])
+        heading("Resume Analysis", styles)
+    )
+
+    story.append(
+        body(
+            f"ATS Score : {analysis['score']}%",
+            styles
+        )
+    )
+
+    story.append(
+        body(
+            f"Career Status : {analysis['readiness']}",
+            styles
+        )
+    )
+
+    story.append(
+        Spacer(1,20)
+    )
+
+    # --------------------------------------------------
+    # Skills
+    # --------------------------------------------------
+
+    story.append(
+        heading("Matched Skills", styles)
     )
 
     for skill in analysis["matched"]:
 
         story.append(
-            Paragraph(f"• {skill}", styles["BodyText"])
+            body(f"• {skill}", styles)
         )
 
-    story.append(Spacer(1, 20))
+    story.append(
+        Spacer(1,15)
+    )
 
     story.append(
-        Paragraph("<b>Missing Skills</b>", styles["Heading2"])
+        heading("Missing Skills", styles)
     )
 
     for skill in analysis["missing"]:
 
         story.append(
-            Paragraph(f"• {skill}", styles["BodyText"])
+            body(f"• {skill}", styles)
         )
 
-    story.append(Spacer(1, 20))
+    story.append(
+        Spacer(1,20)
+    )
+
+    # --------------------------------------------------
+    # AI Suggestions
+    # --------------------------------------------------
 
     story.append(
-        Paragraph("<b>Recommended Project</b>", styles["Heading2"])
+        heading("AI Resume Suggestions", styles)
+    )
+
+    for item in suggestions["suggestions"]:
+
+        story.append(
+            body(
+                f"• {item['title']} ({item['priority']})",
+                styles
+            )
+        )
+
+    story.append(
+        Spacer(1,20)
+    )
+
+    # --------------------------------------------------
+    # Recommended Project
+    # --------------------------------------------------
+
+    story.append(
+        heading("Recommended Project", styles)
     )
 
     story.append(
-        Paragraph(
+        body(
             suggestions["project"],
-            styles["BodyText"]
+            styles
         )
     )
 
-    story.append(Spacer(1, 20))
+    story.append(
+        Spacer(1,30)
+    )
 
     story.append(
         Paragraph(
-            "Generated by CareerTwin AI",
+            "<b>Generated by CareerTwin AI v2.1</b>",
             styles["Italic"]
         )
     )
