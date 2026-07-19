@@ -1,37 +1,84 @@
 # 🤖 CareerTwin AI
 
-CareerTwin AI is an AI-powered resume analysis platform built using Python and Streamlit.
+> AI-powered Career Intelligence Platform built with Python and Streamlit.
 
-## Features
+## 📌 Overview
 
-* Resume Upload (PDF)
-* Resume Text Extraction
-* Skill Detection
-* Missing Skill Analysis
-* AI Engineer Readiness Score
-* Skills Analytics Dashboard
-* Personalized Learning Roadmap
-* Career Status Prediction
+CareerTwin AI helps students analyze resumes, identify skill gaps, evaluate ATS compatibility, discover suitable job roles, and prepare for interviews through an intelligent, interactive dashboard.
 
-## Tech Stack
+---
 
-* Python
-* Streamlit
-* PDFPlumber
-* Matplotlib
+## ✨ Features
 
-## Workflow
+- 📄 Resume Parsing
+- 📊 ATS Score Analysis
+- 🎯 Skill Gap Detection
+- 🚀 Career Readiness Score
+- 💼 Job Match Analysis
+- 🤖 AI Resume Suggestions
+- 🗺 Personalized Learning Roadmap
+- 🎤 Interview Simulator
+- 📥 Professional PDF Career Report
 
-Resume Upload → Skill Detection → Gap Analysis → Readiness Score → Learning Roadmap
+---
 
-## Future Improvements
+## 🛠️ Tech Stack
 
-* NLP-Based Resume Analysis
-* Multiple Career Paths
-* AI-Powered Recommendations
-* Job Matching System
+- Python
+- Streamlit
+- Plotly
+- ReportLab
+- Pandas
+- PDF Processing
 
-## Author
+---
 
-Charan Gosala
-B.Tech AIML Student
+## 📁 Project Structure
+
+```text
+CareerTwin-AI/
+├── app.py
+├── components/
+├── utils/
+├── styles/
+├── assets/
+├── reports/
+└── screenshots/
+```
+
+---
+
+## 🚀 Getting Started
+
+```bash
+git clone <your-repository-url>
+cd CareerTwin-AI
+
+pip install -r requirements.txt
+
+streamlit run app.py
+```
+
+---
+
+## 📸 Screenshots
+
+_Add dashboard screenshots here._
+
+---
+
+## 🎯 Future Improvements
+
+- AI-powered interview evaluation
+- LLM integration
+- LinkedIn profile analysis
+- GitHub profile analysis
+- Cloud deployment
+
+---
+
+## 👨‍💻 Developer
+
+**Charan Gosala**
+
+B.Tech Artificial Intelligence & Machine Learning
