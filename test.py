@@ -1,5 +1,10 @@
-import streamlit as st
+﻿import streamlit as st
 import pdfplumber
+import sys
 
-st.success("pdfplumber works!")
-st.write(pdfplumber.__version__)
+st.title("CareerTwin AI Test")
+
+st.write("Python:", sys.version)
+st.write("pdfplumber version:", pdfplumber.__version__)
+
+st.success("✅ pdfplumber imported successfully")
