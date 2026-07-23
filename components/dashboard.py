@@ -3,11 +3,13 @@ import streamlit as st
 # -----------------------------
 # Resume Processing
 # -----------------------------
-from utils.career_readiness import calculate_career_readiness
-from components.career_readiness import show_career_readiness
 from resume_parser import extract_text
 from utils.extractor import extract_candidate_info
 from utils.analyzer import analyze_resume
+from utils.suggestions import generate_suggestions
+from utils.job_match import calculate_job_matches
+from utils.career_readiness import calculate_career_readiness
+
 from skills_db import ROLES
 
 # -----------------------------
@@ -22,12 +24,7 @@ from components.roadmap import show_roadmap
 from components.recommendations import show_recommendations
 from components.job_match import show_job_matches
 from components.pdf_download import show_pdf_download
-
-# -----------------------------
-# Utilities
-# -----------------------------
-from utils.suggestions import generate_suggestions
-from utils.job_match import calculate_job_matches
+from components.career_readiness import show_career_readiness
 
 
 def dashboard():
@@ -37,15 +34,13 @@ def dashboard():
     upload_col, role_col = st.columns([2, 1])
 
     with upload_col:
-
         uploaded = st.file_uploader(
             "Upload Resume (PDF)",
             type=["pdf"],
-            help="Upload your resume in PDF format."
+            help="Upload your resume in PDF format.",
         )
 
     with role_col:
-
         selected_role = st.selectbox(
             "🎯 Target Role",
             list(ROLES.keys())
@@ -54,22 +49,18 @@ def dashboard():
     st.divider()
 
     if uploaded is None:
-
         st.info("👆 Upload your resume to begin analysis.")
-
         return
 
-    # -----------------------------
+    # ---------------------------------------
     # Analyze Resume
-    # -----------------------------
+    # ---------------------------------------
 
-    with st.spinner("Analyzing Resume..."):
+    with st.spinner("🔍 Analyzing Resume..."):
 
         resume_text = extract_text(uploaded)
 
-        info = extract_candidate_info(
-            resume_text
-        )
+        info = extract_candidate_info(resume_text)
 
         analysis = analyze_resume(
             resume_text,
@@ -84,47 +75,47 @@ def dashboard():
         job_matches = calculate_job_matches(
             resume_text
         )
+
         career_data = calculate_career_readiness(
             analysis,
             job_matches
         )
+
     st.success("✅ Resume analyzed successfully!")
 
-    # -----------------------------
+    # ---------------------------------------
     # KPI Cards
-    # -----------------------------
+    # ---------------------------------------
 
     show_metrics(
         analysis["score"],
         analysis["matched"],
         analysis["missing"],
-        analysis["readiness"]
+        analysis["readiness"],
     )
 
     st.divider()
 
-    # -----------------------------
+    # ---------------------------------------
     # Candidate + ATS
-    # -----------------------------
+    # ---------------------------------------
 
     left, right = st.columns(2)
 
     with left:
-
         show_candidate(info)
 
     with right:
-
         st.subheader("📊 ATS Score")
-
         show_gauge(
             analysis["score"]
         )
 
     st.divider()
-        # -----------------------------
+
+    # ---------------------------------------
     # Skills Section
-    # -----------------------------
+    # ---------------------------------------
 
     skills_col1, skills_col2 = st.columns(2)
 
@@ -133,12 +124,9 @@ def dashboard():
         st.subheader("✅ Skills Found")
 
         if analysis["matched"]:
-
             for skill in analysis["matched"]:
                 st.success(skill)
-
         else:
-
             st.warning("No matching skills found.")
 
     with skills_col2:
@@ -146,19 +134,16 @@ def dashboard():
         st.subheader("❌ Missing Skills")
 
         if analysis["missing"]:
-
             for skill in analysis["missing"]:
                 st.warning(skill)
-
         else:
-
             st.success("No missing skills!")
 
     st.divider()
 
-    # -----------------------------
+    # ---------------------------------------
     # Analytics Dashboard
-    # -----------------------------
+    # ---------------------------------------
 
     st.subheader("📈 Analytics Dashboard")
 
@@ -168,9 +153,11 @@ def dashboard():
 
     st.divider()
 
-    # -----------------------------
+    # ---------------------------------------
     # AI Career Coach
-    # -----------------------------
+    # ---------------------------------------
+
+    st.subheader("🤖 AI Career Coach")
 
     show_ai_assistant(
         analysis
@@ -178,30 +165,45 @@ def dashboard():
 
     st.divider()
 
-    # -----------------------------
+    # ---------------------------------------
     # AI Resume Suggestions
-    # -----------------------------
+    # ---------------------------------------
+
+    st.subheader("💡 AI Resume Suggestions")
 
     show_recommendations(
         suggestion_data
     )
 
     st.divider()
-        # -----------------------------
-    # Job Match Analysis
-    # -----------------------------
+
+    # ---------------------------------------
+    # Career Readiness
+    # ---------------------------------------
+
+    st.subheader("🚀 Career Readiness")
+
     show_career_readiness(
         career_data
     )
+
+    st.divider()
+
+    # ---------------------------------------
+    # Job Match Analysis
+    # ---------------------------------------
+
+    st.subheader("💼 Job Match Analysis")
+
     show_job_matches(
         job_matches
     )
 
     st.divider()
 
-    # -----------------------------
+    # ---------------------------------------
     # Learning Roadmap
-    # -----------------------------
+    # ---------------------------------------
 
     st.subheader("🗺 Personalized Learning Roadmap")
 
@@ -211,9 +213,11 @@ def dashboard():
 
     st.divider()
 
-    # -----------------------------
-    # PDF Career Report
-    # -----------------------------
+    # ---------------------------------------
+    # PDF Report
+    # ---------------------------------------
+
+    st.subheader("📄 Download Career Report")
 
     show_pdf_download(
         info,
@@ -222,30 +226,5 @@ def dashboard():
     )
 
     st.divider()
-        # -----------------------------
-    # Job Match Analysis
-    # -----------------------------
 
-    show_job_matches(
-        job_matches
-    )
-
-    st.divider()
-
-    # -----------------------------
-    # Learning Roadmap
-    # -----------------------------
-
-    st.subheader("🗺 Personalized Learning Roadmap")
-
-    show_roadmap(
-        analysis
-    )
-
-    st.divider()
-
-    # -----------------------------
-    # PDF Career Report
-    # -----------------------------
-
-   
+    st.success("🎉 Career analysis completed successfully!")
