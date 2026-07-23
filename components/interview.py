@@ -8,7 +8,6 @@ from utils.interview_score import evaluate_answer
 def show_interview():
 
     st.divider()
-
     st.header("🎤 AI Interview Simulator")
 
     role = st.selectbox(
@@ -22,10 +21,7 @@ def show_interview():
         key="generate_question"
     ):
 
-        question = random.choice(
-            QUESTIONS[role]
-        )
-
+        question = random.choice(QUESTIONS[role])
         st.session_state["question"] = question
 
     if "question" in st.session_state:
@@ -33,7 +29,6 @@ def show_interview():
         question = st.session_state["question"]
 
         st.subheader("Interview Question")
-
         st.info(question["question"])
 
         answer = st.text_area(
@@ -55,34 +50,24 @@ def show_interview():
 
             else:
 
-               result = evaluate_answer(
-    answer,
-    question["answer"]
-)
+                result = evaluate_answer(
+                    answer,
+                    question["answer"]
+                )
 
-st.metric(
-    "Interview Score",
-    f"{result['score']}%"
-)
+                st.metric(
+                    "Interview Score",
+                    f"{result['score']}%"
+                )
 
-st.info(
-    result["feedback"]
-)
+                st.info(result["feedback"])
 
-if result["missing"]:
+                if result["missing"]:
 
-    st.warning(
-        "Missing Keywords"
-    )
+                    st.warning("Missing Keywords")
 
-    for word in result["missing"]:
+                    for word in result["missing"]:
+                        st.write("•", word)
 
-        st.write("•", word)
-
-with st.expander(
-    "Expected Answer"
-):
-
-    st.write(
-        question["answer"]
-    )
+                with st.expander("Expected Answer"):
+                    st.write(question["answer"])
