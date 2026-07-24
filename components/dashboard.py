@@ -3,12 +3,49 @@ import streamlit as st
 # -----------------------------
 # Resume Processing
 # -----------------------------
-from resume_parser import extract_text
-from utils.extractor import extract_candidate_info
-from utils.analyzer import analyze_resume
-from utils.suggestions import generate_suggestions
-from utils.job_match import calculate_job_matches
-from utils.career_readiness import calculate_career_readiness
+import streamlit as st
+
+try:
+    from resume_parser import extract_text
+    print("✓ resume_parser")
+except Exception as e:
+    print("resume_parser:", e)
+    raise
+
+try:
+    from utils.extractor import extract_candidate_info
+    print("✓ extractor")
+except Exception as e:
+    print("extractor:", e)
+    raise
+
+try:
+    from utils.analyzer import analyze_resume
+    print("✓ analyzer")
+except Exception as e:
+    print("analyzer:", e)
+    raise
+
+try:
+    from utils.suggestions import generate_suggestions
+    print("✓ suggestions")
+except Exception as e:
+    print("suggestions:", e)
+    raise
+
+try:
+    from utils.job_match import calculate_job_matches
+    print("✓ job_match")
+except Exception as e:
+    print("job_match:", e)
+    raise
+
+try:
+    from utils.career_readiness import calculate_career_readiness
+    print("✓ career_readiness")
+except Exception as e:
+    print("career_readiness:", e)
+    raise
 
 from skills_db import ROLES
 
